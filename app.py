@@ -51,10 +51,7 @@ def compensar(servicios_a_compensar):
 
 @app.route('/api/compra', methods=['POST'])
 def iniciar_compra():
-    """
-    Este es el endpoint principal que orquesta toda la transacción.
-    """
-    logging.info("--- 🚀 INICIANDO SAGA DE COMPRA ---")
+    logging.info("---INICIANDO SAGA DE COMPRA ---")
     
     servicios_compensar = []
     
