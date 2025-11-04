@@ -1,0 +1,8 @@
+# Entorno virtual
+venv/
+*.venv/
+.venv/
+
+# Caché de Python
+__pycache__/
+*.pyc
