@@ -9,17 +9,18 @@ app = flask.Flask(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 SERVICE_URLS = {
-    "catalogo": "http://localhost:5001/api/producto/123", # 123 es un ID de ejemplo
-    "pagos_transaccion": "http://localhost:5002/api/pagos/transaccion",
-    "pagos_compensacion": "http://localhost:5002/api/pagos/compensacion",
-    "inventario": "http://localhost:5003/api/inventario/actualizar",
-    "compras_transaccion": "http://localhost:5004/api/compras/transaccion",
-    "compras_compensacion": "http://localhost:5004/api/compras/compensacion",
+    
+    "catalogo": "http://ms-catalogo:5001/api/producto/123",
+    "pagos_transaccion": "http://ms-pagos:5002/api/pagos/transaccion",
+    "pagos_compensacion": "http://ms-pagos:5002/api/pagos/compensacion",
+    "inventario": "http://ms-inventario:5003/api/inventario/actualizar",
+    "compras_transaccion": "http://ms-compras:5004/api/compras/transaccion",
+    "compras_compensacion": "http://ms-compras:5004/api/compras/compensacion",
 }
 
 
 def simular_latencia():
-    """Simula un retraso de red, como pide el TP."""
+    
     time.sleep(random.uniform(0.1, 0.5))
 
 def compensar(servicios_a_compensar):
@@ -56,7 +57,7 @@ def iniciar_compra():
     servicios_compensar = []
     
     try:
-        #1)consulta catalogo (Paso de solo lectura, no requiere compensación)
+        #1)consulta catalogo (ms-catalogo)
         logging.info("Paso 1: Llamando a ms-catalogo...")
         simular_latencia()
         response_catalogo = requests.get(SERVICE_URLS["catalogo"])
@@ -75,7 +76,7 @@ def iniciar_compra():
 
         logging.info("ms-pagos OK (Pago aceptado)")
 
-        #3. Actualizar Inventario (ms-inventario)
+        #3) Actualizar Inventario (ms-inventario)
         logging.info("Paso 3: Llamando a ms-inventario...")
         simular_latencia()
         response_inventario = requests.post(SERVICE_URLS["inventario"])
@@ -110,4 +111,4 @@ def iniciar_compra():
         return flask.jsonify({"mensaje": f"La transacción falló y fue revertida. Motivo: {e}"}), 409
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
